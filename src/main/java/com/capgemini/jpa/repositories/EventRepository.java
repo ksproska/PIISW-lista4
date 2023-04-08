@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findEventsByTimeBetweenAndAnalysisRequiredEquals(
@@ -19,4 +20,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Modifying
     @Query("update Event u set u.analysisRequired = true")
     void queryAllByDurationGreaterThan(Class<? extends Event> clazz, int threshold);
+
+    @Query(value =
+        "SELECT new com.capgemini.jpa.repositories.ServerStatistic(e.server, count (e)) FROM Event e GROUP BY e.server"
+    )
+    List<ServerStatistic> groupByEventWithJPQL();
+
 }
