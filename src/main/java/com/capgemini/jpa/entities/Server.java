@@ -4,19 +4,20 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.data.jpa.repository.Lock;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@Table(name = "server")
+//@SQLDelete(sql = "UPDATE server SET deleted = true WHERE id=?")
+//@Where(clause = "deleted=false")
 public class Server {
 
     @Id
@@ -30,25 +31,45 @@ public class Server {
     @Column(nullable = false)
     private String ip;
 
+    @Version
+    @Column
+    private Long version;
+
+    @Column
+    private LocalDateTime createdDate;
+
+    @Column
+    private LocalDateTime lastUpdatedDate;
+
+//    @Column
+//    private boolean deleted;
+
     public Server(String name, String ip) {
         super();
         this.name = name;
         this.ip = ip;
+        createdDate = LocalDateTime.now();
+        lastUpdatedDate = createdDate;
+//        deleted = false;
     }
 
+    @Lock(LockModeType.OPTIMISTIC)
     public Long getVersion(){
-        //todo: uncomment it
-        return null;
+        return version;
     }
 
+    @Lock(LockModeType.OPTIMISTIC)
     public LocalDateTime getCreatedDate(){
-        //todo: uncomment it
-        return null;
+        return createdDate;
     }
 
+    @Lock(LockModeType.OPTIMISTIC)
     public LocalDateTime getLastUpdateDate(){
-        //todo: uncomment it
-        return null;
+        return lastUpdatedDate;
     }
 
+    @PostUpdate
+    public void setLastUpdateDate() {
+        lastUpdatedDate = LocalDateTime.now();
+    }
 }
