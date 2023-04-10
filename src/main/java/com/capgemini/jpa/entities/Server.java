@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "update server set deleted=true where id=?")
-@Where(clause = "deleted IS NULL OR deleted=false")
+@SQLDelete(sql = "update server set is_active=true where id=?")
+@Where(clause = "is_active IS NULL OR is_active=true")
 public class Server {
 
     @Id
@@ -39,8 +39,8 @@ public class Server {
     @Column
     private LocalDateTime lastUpdatedDate;
 
-    @Column
-    private Boolean deleted;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     public Server(String name, String ip) {
         super();
@@ -48,7 +48,7 @@ public class Server {
         this.ip = ip;
         createdDate = LocalDateTime.now();
         lastUpdatedDate = createdDate;
-        deleted = false;
+        isActive = true;
     }
 
     public Long getVersion(){
