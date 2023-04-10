@@ -18,8 +18,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     void deleteByTimeBefore(LocalDateTime givenDate);
 
     @Modifying
-    @Query("update Event u set u.analysisRequired = true")
-    void queryAllByDurationGreaterThan(Class<? extends Event> clazz, int threshold);
+    @Query("update Event e set e.analysisRequired = true where type (e) = ?1")
+    void queryAllByDurationGreaterThan(Class<? extends Event> clazz, int duration);
 
     @Query(value =
         "SELECT new com.capgemini.jpa.repositories.ServerStatistic(e.server, count (e)) FROM Event e GROUP BY e.server"
