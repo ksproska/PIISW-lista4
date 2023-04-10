@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.data.jpa.repository.Lock;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,9 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@Table(name = "server")
-//@SQLDelete(sql = "UPDATE server SET deleted = true WHERE id=?")
-//@Where(clause = "deleted=false")
+@SQLDelete(sql = "update server set deleted=true where id=?")
+@Where(clause = "deleted IS NULL OR deleted=false")
 public class Server {
 
     @Id
@@ -41,8 +39,8 @@ public class Server {
     @Column
     private LocalDateTime lastUpdatedDate;
 
-//    @Column
-//    private boolean deleted;
+    @Column
+    private Boolean deleted;
 
     public Server(String name, String ip) {
         super();
@@ -50,20 +48,17 @@ public class Server {
         this.ip = ip;
         createdDate = LocalDateTime.now();
         lastUpdatedDate = createdDate;
-//        deleted = false;
+        deleted = false;
     }
 
-    @Lock(LockModeType.OPTIMISTIC)
     public Long getVersion(){
         return version;
     }
 
-    @Lock(LockModeType.OPTIMISTIC)
     public LocalDateTime getCreatedDate(){
         return createdDate;
     }
 
-    @Lock(LockModeType.OPTIMISTIC)
     public LocalDateTime getLastUpdateDate(){
         return lastUpdatedDate;
     }

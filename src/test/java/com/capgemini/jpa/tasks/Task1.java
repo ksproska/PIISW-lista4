@@ -8,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.transaction.TestTransaction;
+import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
+import org.hibernate.LazyInitializationException;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(AuditingConfiguration.class)
@@ -72,12 +73,14 @@ class Task1 {
         // given
         Server server = new Server("server 1", "138.0.2.5");
         serverRepository.saveAndFlush(server); // we need to force a flush to demonstrate the feature, under normal execution this would happen during transaction commit
+        assertEquals(Optional.of(server), serverRepository.findById(server.getId()));
 
         // when
         serverRepository.deleteById(server.getId());
         TestTransaction.end();
 
         // then
-        assertThrows( EntityNotFoundException.class, () -> serverRepository.getById(server.getId()));
+        assertEquals(Optional.empty(), serverRepository.findById(server.getId()));
+        assertThrows( LazyInitializationException.class, () -> serverRepository.getById(server.getId()).toString());
     }
 }
