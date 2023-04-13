@@ -45,4 +45,24 @@ public abstract class Event {
     @Column
     private boolean analysisRequired;
 
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public boolean isAnalysisRequired() {
+        return analysisRequired;
+    }
+
 }
