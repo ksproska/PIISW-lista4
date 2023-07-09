@@ -25,6 +25,8 @@ W celu realizacji zadania należy zapoznać się z dokumentacją:
 
 7. Każde zadanie musi posiadać implementację w teście o nazwie `TaskX` gdzie `X` to numer zadania. Dla każdego zadania został przygotowany szablon testu.
 
+![Diagram klas](readme_imgs/img.png)
+
 ## Zadania
 
 1. (3 pkt) Zmodyfikuj klasę Server, dodaj _Optimistic Locking_ oraz roszerz klasę o dwa pole:
@@ -75,3 +77,5 @@ W celu realizacji zadania należy zapoznać się z dokumentacją:
    Opisane zapytanie moze zwrócić wiele rekordów, dlatego zapewnij, że tylko wymagane dane zostaną załadowane i odbędzie się to w jak najmniejszej liczbie zapytań (najlepiej jednym zapytaniu do bazy danych).
 
    **Wskazówka**: zapoznaj się z działaniem adnotacji `@NamedEntityGraph`.
+
+![Diagram klas po zmainach](readme_imgs/img_1.png)
